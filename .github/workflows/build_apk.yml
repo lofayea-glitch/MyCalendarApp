@@ -5,6 +5,8 @@ on:
     branches: [ main ]
 
 jobs:
+- name: Migrate project to embedding v2
+  run: flutter create .
   build:
     runs-on: ubuntu-latest
     steps:
