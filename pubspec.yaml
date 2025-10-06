@@ -1,4 +1,4 @@
-name: my_calendar_app
+name: mycalendarapp
 description: A simple offline calendar with Hijri support, notifications, themes and an Android widget.
 publish_to: "none"
 version: 0.0.1
