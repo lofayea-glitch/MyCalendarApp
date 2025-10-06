@@ -10,23 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 🧩 1. تحميل المشروع من GitHub
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 🛠️ 2. إعداد Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.0'
 
+      # 📦 3. تحميل التبعيات
       - name: Get dependencies
         run: flutter pub get
 
+      # ⚙️ 4. تصحيح خطأ flutter_local_notifications في Android SDK 33
+      - name: Patch flutter_local_notifications bug
+        run: |
+          sed -i 's/bigPictureStyle.bigLargeIcon(null);/bigPictureStyle.bigLargeIcon((android.graphics.Bitmap) null);/' $(find $HOME/.pub-cache -path "*/flutter_local_notifications*/android/src/main/java/com/dexterous/flutterlocalnotifications/FlutterLocalNotificationsPlugin.java")
+
+      # 🔁 5. تحديث المشروع إلى embedding V2 إذا لزم الأمر
       - name: Migrate to embedding v2
         run: flutter create .
 
+      # 🏗️ 6. بناء APK الإصدار النهائي
       - name: Build release APK
         run: flutter build apk --release
 
+      # 📤 7. رفع الـ APK الناتج إلى GitHub Artifacts
       - name: Upload APK to artifacts
         uses: actions/upload-artifact@v4
         with:
