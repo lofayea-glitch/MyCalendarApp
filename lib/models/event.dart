@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+
 part 'event.g.dart';
 
 @HiveType(typeId: 0)
@@ -15,5 +16,10 @@ class Event extends HiveObject {
   @HiveField(3)
   DateTime dateTime;
 
-  Event({required this.id, required this.title, this.description = '', required this.dateTime});
+  Event({
+    required this.id,
+    required this.title,
+    this.description = '',
+    required this.dateTime,
+  });
 }
