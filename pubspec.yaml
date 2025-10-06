@@ -7,6 +7,7 @@ environment:
   sdk: ">=2.18.0 <4.0.0"
 
 dependencies:
+   uuid: ^3.0.7
   flutter:
     sdk: flutter
   table_calendar: ^3.0.8
