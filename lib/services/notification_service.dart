@@ -12,11 +12,10 @@ class NotificationService {
 
   Future<void> init() async {
     final android = AndroidInitializationSettings('@mipmap/ic_launcher');
-    final ios = DarwinInitializationSettings();
-
+    final ios = IOSInitializationSettings(); // ✅ بدل DarwinInitializationSettings
     final settings = InitializationSettings(android: android, iOS: ios);
-    await _plugin.initialize(settings);
 
+    await _plugin.initialize(settings);
     tz.initializeTimeZones();
   }
 
@@ -38,7 +37,7 @@ class NotificationService {
           priority: Priority.high,
         ),
       ),
-      // ❌ أزلنا androidScheduleMode لأنه لم يعد مدعومًا
+      androidAllowWhileIdle: true, // ✅ مضاف حديثاً
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
