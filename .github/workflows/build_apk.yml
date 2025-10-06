@@ -2,29 +2,33 @@ name: Build Flutter APK
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-- name: Migrate project to embedding v2
-  run: flutter create .
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.5'
+          flutter-version: '3.24.0' # يمكنك تغييرها حسب آخر إصدار مستقر
 
-      - name: Install dependencies
+      - name: Get dependencies
         run: flutter pub get
 
-      - name: Build APK (release)
+      - name: Migrate to embedding v2
+        run: flutter create .
+
+      - name: Build release APK
         run: flutter build apk --release
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload APK to artifacts
+        uses: actions/upload-artifact@v3
         with:
-          name: app-release-apk
+          name: MyCalendarApp-APK
           path: build/app/outputs/flutter-apk/app-release.apk
