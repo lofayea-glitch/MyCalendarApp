@@ -18,16 +18,29 @@ jobs:
         with:
           flutter-version: '3.24.0'
 
+      - name: Enable caching for pub
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            build
+          key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      - name: Clean project
+        run: flutter clean
+
       - name: Get dependencies
         run: flutter pub get
 
-      # ✅ الخطوة المهمة: توليد ملفات Hive (event.g.dart)
+      # ✅ لتوليد ملفات Hive (event.g.dart)
       - name: Generate Hive TypeAdapters
         run: flutter packages pub run build_runner build --delete-conflicting-outputs
 
-      # (اختياري) يتأكد أن مشروعك يستخدم embedding v2
-      - name: Migrate to embedding v2
-        run: flutter create .
+      # ✅ إصلاح المشكلة مع flutter_local_notifications
+      - name: Downgrade flutter_local_notifications temporarily
+        run: flutter pub add flutter_local_notifications@9.9.3
 
       - name: Build release APK
         run: flutter build apk --release
