@@ -13,21 +13,34 @@ class NotificationService {
   Future<void> init() async {
     final android = AndroidInitializationSettings('@mipmap/ic_launcher');
     final ios = DarwinInitializationSettings();
-    await _plugin.initialize(NotificationSettings(android: android, iOS: ios));
+
+    final settings = InitializationSettings(android: android, iOS: ios);
+    await _plugin.initialize(settings);
+
     tz.initializeTimeZones();
   }
 
   Future<void> scheduleNotification(Event e) async {
-    final scheduled = e.dateTime.subtract(Duration(minutes: 10));
+    final scheduled = e.dateTime.subtract(const Duration(minutes: 10));
+
     if (scheduled.isBefore(DateTime.now())) return;
+
     await _plugin.zonedSchedule(
       e.id.hashCode,
       'تذكير: ${e.title}',
       e.description,
       tz.TZDateTime.from(scheduled, tz.local),
-      const NotificationDetails(android: AndroidNotificationDetails('calendar_chan', 'Calendar', importance: Importance.high)),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'calendar_chan',
+          'Calendar',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+      ),
+      // ❌ أزلنا androidScheduleMode لأنه لم يعد مدعومًا
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }
