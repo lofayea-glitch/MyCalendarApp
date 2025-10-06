@@ -27,8 +27,8 @@ jobs:
       - name: Build release APK
         run: flutter build apk --release
 
-      - name: Upload APK to artifacts
-        uses: actions/upload-artifact@v3
+     - name: Upload APK to artifacts
+  uses: actions/upload-artifact@v4
         with:
           name: MyCalendarApp-APK
           path: build/app/outputs/flutter-apk/app-release.apk
